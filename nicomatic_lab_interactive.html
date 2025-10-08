@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nicomatic Laboratory — Interactive Logo</title>
+  <style>
+    :root {
+      --blue1:#009FE3;
+      --blue2:#0077B6;
+      --white:#ffffff;
+    }
+    html, body {
+      height:100%;
+      margin:0;
+      font-family:Inter, Segoe UI, Roboto, Arial, sans-serif;
+      background:linear-gradient(135deg,var(--blue1),var(--blue2));
+      overflow:hidden;
+    }
+
+    .wrap {
+      position:fixed;inset:0;
+      display:flex;align-items:center;justify-content:center;
+      overflow:hidden;
+    }
+
+    .particle {
+      position:absolute;border-radius:50%;opacity:0.12;
+      filter:blur(6px);will-change:transform;
+    }
+    .p1{width:28vmin;height:28vmin;left:5%;top:10%;
+      background:radial-gradient(circle,#ffffff,rgba(255,255,255,0));}
+    .p2{width:18vmin;height:18vmin;right:6%;bottom:12%;
+      background:radial-gradient(circle,rgba(255,255,255,0.9),rgba(255,255,255,0));}
+    .p3{width:10vmin;height:10vmin;left:40%;bottom:5%;
+      background:radial-gradient(circle,rgba(255,255,255,0.7),rgba(255,255,255,0));}
+
+    .stage {
+      position:relative;z-index:2;
+      width:min(72vmin,86vh);height:min(72vmin,86vh);
+      display:flex;align-items:center;justify-content:center;
+      transition:transform 280ms ease;
+    }
+
+    .card {
+      width:100%;height:100%;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      border-radius:2vmin;
+      background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      backdrop-filter:blur(6px);
+      box-shadow:0 20px 50px rgba(0,0,0,0.2);
+    }
+
+    .logo {
+      width:46%;max-width:32vmin;max-height:32vmin;
+      display:flex;align-items:center;justify-content:center;
+      transition:transform 350ms cubic-bezier(.2,.9,.3,1);
+    }
+    .logo img {width:100%;height:auto;display:block;}
+
+    .label {
+      margin-top:2vmin;color:var(--white);
+      font-weight:700;letter-spacing:2px;font-size:3.6vmin;
+    }
+
+    .card::after {
+      content:"";position:absolute;inset:0;border-radius:inherit;
+      pointer-events:none;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+    }
+
+    .hint {
+      position:fixed;left:50%;transform:translateX(-50%);
+      bottom:2vmin;color:rgba(255,255,255,0.9);font-size:2vmin;
+    }
+
+    /* Modal styles */
+    .modal-bg {
+      position:fixed;inset:0;
+      background:rgba(0,0,0,0.45);
+      display:none;align-items:center;justify-content:center;
+      backdrop-filter:blur(8px);
+      z-index:50;
+    }
+    .modal {
+      background:rgba(255,255,255,0.15);
+      color:white;
+      border-radius:2vmin;
+      padding:3vmin 4vmin;
+      width:min(80vmin,90%);
+      box-shadow:0 10px 40px rgba(0,0,0,0.3);
+      backdrop-filter:blur(12px);
+      text-align:center;
+      animation:pop 0.3s ease-out;
+    }
+    .modal h2 {
+      margin-top:0;
+      font-size:3.4vmin;
+      letter-spacing:1px;
+    }
+    .modal ul {
+      list-style:none;
+      padding:0;
+      margin:2vmin 0 0;
+      text-align:left;
+    }
+    .modal li {
+      padding:0.8vmin 0;
+      font-size:2.6vmin;
+    }
+    .close-btn {
+      margin-top:2vmin;
+      background:rgba(255,255,255,0.2);
+      color:white;
+      border:none;
+      padding:1vmin 2vmin;
+      border-radius:1vmin;
+      cursor:pointer;
+      font-size:2.4vmin;
+    }
+    .close-btn:hover { background:rgba(255,255,255,0.35); }
+
+    @keyframes pop {
+      from { transform:scale(0.9); opacity:0; }
+      to { transform:scale(1); opacity:1; }
+    }
+
+    @media (max-width:600px) {
+      .label{font-size:5vmin}.logo{max-width:40vmin}
+      .modal li{font-size:3.6vmin;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="wrap">
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+
+    <div class="stage" id="stage" role="application" aria-label="Nicomatic Interactive Image">
+      <div class="card" id="card">
+        <div class="logo" id="logo">
+          <img src="data:image/png;base64,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" alt="Nicomatic logo" />
+        </div>
+        <div class="label">LABORATORY</div>
+      </div>
+    </div>
+
+    <div class="hint">Move or touch — double tap to view lab tests</div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <h2>Laboratory Tests</h2>
+      <ul>
+        <li>• Vibration and shock tests</li>
+        <li>• Durability tests (500 insertion/extraction cycles)</li>
+        <li>• Electrical resistance tests</li>
+        <li>• Salt spray tests (96 hours)</li>
+        <li>• Dielectric strength tests</li>
+        <li>• Tests according to MIL standards</li>
+      </ul>
+      <button class="close-btn" id="close-modal">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const stage = document.getElementById('stage');
+    const card = document.getElementById('card');
+    const logo = document.getElementById('logo');
+    const particles = document.querySelectorAll('.particle');
+    const modalBg = document.getElementById('modal-bg');
+    const closeModal = document.getElementById('close-modal');
+
+    let rect = stage.getBoundingClientRect();
+    function updateRect(){ rect = stage.getBoundingClientRect(); }
+    window.addEventListener('resize', updateRect);
+
+    function handleMove(clientX, clientY){
+      const cx = rect.left + rect.width/2;
+      const cy = rect.top + rect.height/2;
+      const dx = (clientX - cx) / rect.width;
+      const dy = (clientY - cy) / rect.height;
+
+      const tiltX = dy * -10;
+      const tiltY = dx * 12;
+      card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+      logo.style.transform = `translate3d(${dx*6}vmin, ${dy*6}vmin, 0) scale(${1 + Math.min(0.06, Math.abs(dx)+Math.abs(dy))})`;
+
+      particles.forEach((p, i)=>{
+        const intensity = (i+1) * 8;
+        p.style.transform = `translate3d(${(-dx*intensity)}px, ${(-dy*intensity)}px, 0)`;
+      });
+    }
+
+    function onPointer(e){ handleMove(e.clientX, e.clientY); }
+    window.addEventListener('pointermove', onPointer);
+
+    function pulse() {
+      card.animate([
+        { transform: card.style.transform || 'scale(1) rotateX(0deg) rotateY(0deg)' },
+        { transform: (card.style.transform || 'scale(1)') + ' scale(0.98)' },
+        { transform: card.style.transform || 'scale(1)' }
+      ], { duration: 260, easing: 'ease-out' });
+    }
+    window.addEventListener('pointerdown', (e)=>{ pulse(e.clientX,e.clientY); });
+
+    let t = 0;
+    function idle(){ 
+      t += 0.01; 
+      particles.forEach((p,i)=>{ 
+        const s= Math.sin(t*(0.3+i*0.2))*6; 
+        p.style.transform += ` translateY(${s}px)`; 
+      }); 
+      requestAnimationFrame(idle); 
+    }
+    idle();
+
+    // Double click / tap to show modal
+    let lastTap = 0;
+    window.addEventListener('pointerdown', () => {
+      const now = Date.now();
+      if (now - lastTap < 350) {
+        modalBg.style.display = 'flex';
+      }
+      lastTap = now;
+    });
+
+    closeModal.addEventListener('click', () => {
+      modalBg.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
